@@ -78,8 +78,6 @@
             >{{ item?.status }}</span
           >
         </template>
-
-        <!--icons template-->
         <template v-slot:item.actions="{ item }">
           <span class="tw-flex tw-justify-end">
             <v-icon class="mr-2" @click="confirmDelete(item)"
@@ -101,7 +99,7 @@
     <v-dialog v-model="showEditPageModal">
       <v-card
         style="
-          width: 1220px;
+          width: 1175px;
           position: absolute;
           right: 0;
           top: 0;
@@ -261,11 +259,11 @@
               height: 3rem;
               width: 3rem;
               margin: auto;
-              margin-bottom: 1.9rem;
+              margin-bottom: 1rem;
             "
         /></v-card-title>
-        <v-card-text style="font-weight: 700; color: black"
-          >Customer successfully deleted</v-card-text
+        <v-card-text style="font-weight: bolder; color: black"
+          >Customer details successfully deleted</v-card-text
         >
         <v-card-actions
           style="
@@ -275,14 +273,13 @@
             justify-content: center;
           "
         >
-          <v-btn
-            style="position: absolute; left: 0; top: 0; padding-top: 1rem"
+          <v-icon
+            style="position: absolute; left: 0; top: 0; padding-top: 10rem"
             text
             @click="showSuccessDialog = false"
-            ><v-icon style="color: black; background: transparent"
-              >mdi-close-circle</v-icon
-            ></v-btn
           >
+            mdi-close-circle
+          </v-icon>
           <v-icon style="color: #9bcaa4; font-size: 5rem"
             >mdi-check-circle-outline</v-icon
           >
@@ -291,7 +288,10 @@
     </v-dialog>
   </div>
 </template>
+
 <script>
+import AvatarIcon from '~/assets/icons/avatar.vue'
+
 export default {
   layout: 'admin',
   components: {
@@ -299,20 +299,21 @@ export default {
   },
   data() {
     return {
-      search: '',
       showDeleteDialog: false,
       showSuccessDialog: false,
       showEditPageModal: false,
       showConfirmSuccessDialog: false,
-      deleteItem: null,
-      selectedCustomer: {
-        name: '',
-        phone: '',
-        email: '',
-        bank: '',
-        accountNumber: '',
-      },
+      selectedCustomer: {},
       tab: 0,
+      search: '',
+      headers: [
+        { text: 'Name', value: 'customer' },
+        { text: 'Transaction ID', value: 'transactionID' },
+        { text: 'Amount', value: 'amount' },
+        { text: 'Date', value: 'date' },
+        { text: 'Status', value: 'status' },
+        { text: 'Actions', value: 'actions', sortable: false },
+      ],
       items: [
         {
           title: 'All',
@@ -343,44 +344,6 @@ export default {
           title: 'Cable subscription',
           number: true,
           length: 6,
-        },
-      ],
-      headers: [
-        {
-          text: 'Customer',
-          align: 'start',
-          sortable: true,
-          value: 'customer',
-        },
-        {
-          text: 'Transaction ID',
-          align: 'start',
-          sortable: true,
-          value: 'transactionID',
-        },
-        {
-          text: 'Type',
-          align: 'start',
-          sortable: true,
-          value: 'type',
-        },
-        {
-          text: 'Amount',
-          align: 'start',
-          sortable: true,
-          value: 'amount',
-        },
-        {
-          text: 'Date',
-          align: 'start',
-          sortable: true,
-          value: 'date',
-        },
-        {
-          text: 'Status',
-          align: 'start',
-          sortable: true,
-          value: 'status',
         },
       ],
       tableItems: [
@@ -428,38 +391,35 @@ export default {
     }
   },
   methods: {
-    openEditPage(item) {
-      this.selectedCustomer = { ...item }
-      this.showEditPageModal = true
-    },
-
-    saveCustomerDetails() {
-      // Save the customer details logic here
-      this.showEditPageModal = false
-      this.showConfirmSuccessDialog = true
-    },
     confirmDelete(item) {
-      this.deleteItem = item
+      this.selectedCustomer = item
       this.showDeleteDialog = true
+    },
+    deleteCustomer() {
+      // Logic to delete the customer
+      this.showDeleteDialog = false
+      this.showSuccessDialog = true
     },
     cancelDelete() {
       this.showDeleteDialog = false
-      this.deleteItem = null
     },
-    deleteCustomer() {
-      this.tableItems = this.tableItems.filter(
-        (item) => item !== this.deleteItem
-      )
-      this.showDeleteDialog = false
-      this.showSuccessDialog = true
+    openEditPage(item) {
+      this.selectedCustomer = item
+      this.showEditPageModal = true
+    },
+    saveCustomerDetails() {
+      // Logic to save customer details
+      this.showEditPageModal = false
+      this.showConfirmSuccessDialog = true
+    },
+    handleDotsClick(item) {
+      // Logic to handle dots click
+      console.log('Dots clicked for item:', item)
     },
   },
 }
 </script>
 
 <style scoped>
-.back {
-  background-color: transparent;
-  color: black;
-}
+/* Add any scoped styles here */
 </style>
